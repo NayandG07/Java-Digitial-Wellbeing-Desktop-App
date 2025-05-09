@@ -1,0 +1,13 @@
+=== Digital Wellbeing Report for 2025-05-09 ===
+
+Total screen time: 3h 50m
+
+Application breakdown:
+------------------------
+Microsoft Edge: 1h 30m 0s
+Visual Studio Code: 1h 0s
+Microsoft Word: 30m 0s
+Outlook: 20m 0s
+Spotify: 15m 0s
+File Explorer: 10m 0s
+Notepad: 5m 0s

@@ -1,0 +1,8 @@
+Application,Time (ms),Time (human readable)
+Visual Studio Code,3600000,1h 0s
+Notepad,300000,5m 0s
+Outlook,1200000,20m 0s
+File Explorer,600000,10m 0s
+Microsoft Edge,5400000,1h 30m 0s
+Microsoft Word,1800000,30m 0s
+Spotify,900000,15m 0s
