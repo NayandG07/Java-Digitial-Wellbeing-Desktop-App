@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4j>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>target/DigitalWellbeing-1.0-SNAPSHOT.jar</jar>
+  <outfile>DigitalWellbeing.exe</outfile>
+  <errTitle>Digital Wellbeing</errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>https://adoptium.net/</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon></icon>
+  <jre>
+    <path>./jre</path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>11</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+    <initialHeapSize>128</initialHeapSize>
+    <maxHeapSize>512</maxHeapSize>
+    <opt>-Dfile.encoding=UTF-8</opt>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>1.0.0.0</txtFileVersion>
+    <fileDescription>Digital Wellbeing Application</fileDescription>
+    <copyright>Your Name</copyright>
+    <productVersion>1.0.0.0</productVersion>
+    <txtProductVersion>1.0.0.0</txtProductVersion>
+    <productName>Digital Wellbeing</productName>
+    <companyName></companyName>
+    <internalName>DigitalWellbeing</internalName>
+    <originalFilename>DigitalWellbeing.exe</originalFilename>
+  </versionInfo>
+</launch4j> 

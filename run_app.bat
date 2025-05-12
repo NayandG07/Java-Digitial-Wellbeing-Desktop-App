@@ -1,4 +1,3 @@
 @echo off
-echo Starting Digital Wellbeing Application...
-java -cp target/classes com.wellbeing.DigitalWellbeingApp
+java -jar target\DigitalWellbeing-1.0-SNAPSHOT.jar
 pause 

@@ -5,9 +5,6 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class MainFrame extends JFrame {
 
@@ -17,7 +14,7 @@ public class MainFrame extends JFrame {
     private BreakRemindersPanel breakRemindersPanel;
     private ReportsPanel reportsPanel;
     private JTextField searchField;
-    private JButton searchButton;
+    private JTabbedPane tabbedPane;
 
     public MainFrame() {
         // Setup the frame
@@ -42,6 +39,23 @@ public class MainFrame extends JFrame {
     }
 
     private void initComponents() {
+        // Create main panels
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        // Create search panel
+        JPanel searchPanel = new JPanel(new BorderLayout(5, 0));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        searchField = new JTextField();
+        JButton searchButton = new JButton("Search");
+
+        searchPanel.add(new JLabel("Search: "), BorderLayout.WEST);
+        searchPanel.add(searchField, BorderLayout.CENTER);
+        searchPanel.add(searchButton, BorderLayout.EAST);
+
+        // Add search functionality
+        searchButton.addActionListener(e -> performSearch());
+        searchField.addActionListener(e -> performSearch());
+
         // Create tab panels
         dashboardPanel = new DashboardPanel();
         focusModePanel = new FocusModePanel();
@@ -50,110 +64,83 @@ public class MainFrame extends JFrame {
         reportsPanel = new ReportsPanel();
 
         // Create tabbed pane and add panels
-        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Dashboard", new ImageIcon(), dashboardPanel, "View your usage statistics");
         tabbedPane.addTab("Focus Mode", new ImageIcon(), focusModePanel, "Block distracting applications");
         tabbedPane.addTab("Goals & Alerts", new ImageIcon(), goalsPanel, "Set screen time limits");
         tabbedPane.addTab("Break Reminders", new ImageIcon(), breakRemindersPanel, "Configure break reminders");
         tabbedPane.addTab("Reports", new ImageIcon(), reportsPanel, "View usage reports");
 
-        // Create search panel at the top
-        JPanel searchPanel = new JPanel(new BorderLayout(5, 0));
-        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-
-        JLabel searchLabel = new JLabel("Search: ");
-        searchField = new JTextField();
-        searchButton = new JButton("Search");
-
-        // Set preferred width for search components
-        searchField.setPreferredSize(new Dimension(250, 25));
-        searchButton.setPreferredSize(new Dimension(80, 25));
-
-        // Add action to search button
-        searchButton.addActionListener(e -> performSearch());
-
-        // Add action to search field (press Enter to search)
-        searchField.addActionListener(e -> performSearch());
-
-        searchPanel.add(searchLabel, BorderLayout.WEST);
-        searchPanel.add(searchField, BorderLayout.CENTER);
-        searchPanel.add(searchButton, BorderLayout.EAST);
-
-        // Add components to the frame
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        // Add components to main panel
         mainPanel.add(searchPanel, BorderLayout.NORTH);
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
 
-        getContentPane().add(mainPanel);
+        // Add main panel to the frame
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
     }
 
     private void performSearch() {
         String searchTerm = searchField.getText().trim().toLowerCase();
         if (searchTerm.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Please enter a search term",
-                    "Search",
-                    JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
-        // Get activity data from tracker
-        ActivityTracker tracker = ActivityTracker.getInstance();
-        Map<String, Long> appUsage = tracker.getAppUsageTimes();
-
-        if (appUsage.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "No application usage data available yet.\nUse the app for a while to track application usage.",
-                    "No Data Available",
-                    JOptionPane.INFORMATION_MESSAGE);
-            return;
+        // Search logic depends on selected tab
+        int currentTab = tabbedPane.getSelectedIndex();
+        switch (currentTab) {
+            case 0: // Dashboard
+                searchInDashboard(searchTerm);
+                break;
+            case 1: // Focus Mode
+                searchInFocusMode(searchTerm);
+                break;
+            case 2: // Goals & Alerts
+                searchInGoals(searchTerm);
+                break;
+            case 3: // Break Reminders
+                searchInBreakReminders(searchTerm);
+                break;
+            case 4: // Reports
+                searchInReports(searchTerm);
+                break;
         }
+    }
 
-        // Find matches
-        List<String> matchingApps = new ArrayList<>();
-        for (String app : appUsage.keySet()) {
-            if (app.toLowerCase().contains(searchTerm)) {
-                matchingApps.add(app);
-            }
-        }
+    private void searchInDashboard(String searchTerm) {
+        // Search in dashboard - typically focuses on app names in usage statistics
+        JOptionPane.showMessageDialog(this,
+                "Searching for '" + searchTerm + "' in Dashboard",
+                "Search Results",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
 
-        // Display results
-        if (matchingApps.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "No applications matching '" + searchTerm + "' found",
-                    "Search Results",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            StringBuilder results = new StringBuilder();
-            results.append("Found ").append(matchingApps.size()).append(" applications matching '")
-                    .append(searchTerm).append("':\n\n");
+    private void searchInFocusMode(String searchTerm) {
+        // Use the existing search function in focus mode
+        focusModePanel.searchApplications(searchTerm);
+    }
 
-            for (String app : matchingApps) {
-                long millis = appUsage.get(app);
-                long hours = millis / (1000 * 60 * 60);
-                long minutes = (millis % (1000 * 60 * 60)) / (1000 * 60);
-                long seconds = (millis % (1000 * 60)) / 1000;
+    private void searchInGoals(String searchTerm) {
+        // Search in goals panel
+        JOptionPane.showMessageDialog(this,
+                "Searching for '" + searchTerm + "' in Goals & Alerts",
+                "Search Results",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
 
-                String timeUsed = (hours > 0 ? hours + "h " : "") +
-                        (minutes > 0 ? minutes + "m " : "") +
-                        seconds + "s";
+    private void searchInBreakReminders(String searchTerm) {
+        // Search in break reminders panel
+        JOptionPane.showMessageDialog(this,
+                "Searching for '" + searchTerm + "' in Break Reminders",
+                "Search Results",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
 
-                results.append(app).append(": ").append(timeUsed).append("\n");
-            }
-
-            JTextArea textArea = new JTextArea(results.toString());
-            textArea.setEditable(false);
-            textArea.setLineWrap(true);
-            textArea.setWrapStyleWord(true);
-
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            scrollPane.setPreferredSize(new Dimension(400, 300));
-
-            JOptionPane.showMessageDialog(this,
-                    scrollPane,
-                    "Search Results",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
+    private void searchInReports(String searchTerm) {
+        // Search in reports panel
+        JOptionPane.showMessageDialog(this,
+                "Searching for '" + searchTerm + "' in Reports",
+                "Search Results",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void setupSystemTray() {

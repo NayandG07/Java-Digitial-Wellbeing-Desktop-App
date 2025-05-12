@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class ActivityTracker {
     private static ActivityTracker instance;
@@ -144,7 +145,7 @@ public class ActivityTracker {
         return usageTimes.entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
                 .limit(limit)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public long getTotalScreenTime() {

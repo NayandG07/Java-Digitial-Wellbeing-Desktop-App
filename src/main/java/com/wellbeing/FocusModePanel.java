@@ -265,4 +265,9 @@ public class FocusModePanel extends JPanel implements ActivityTracker.AppUsageLi
             updateAppsList();
         }
     }
+
+    public void searchApplications(String searchTerm) {
+        searchField.setText(searchTerm);
+        filterAppList();
+    }
 }

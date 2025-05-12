@@ -5,6 +5,7 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DataManager {
     private static final String DATA_DIR = "data";
@@ -55,9 +56,23 @@ public class DataManager {
     public void generateDailyReport(LocalDate date) {
         Map<String, Long> usageData = loadDailyUsage(date);
 
-        // Only proceed if there's actual usage data
+        // No data available, inform the user but don't generate sample data
         if (usageData.isEmpty()) {
             System.out.println("No usage data available for " + date.format(DATE_FORMAT));
+            // Create an empty report file indicating no data
+            try {
+                File reportFile = new File(REPORTS_DIR + "/" + date.format(DATE_FORMAT) + "_report.txt");
+                if (!reportFile.exists()) {
+                    try (PrintWriter writer = new PrintWriter(new FileWriter(reportFile))) {
+                        writer.println("=== Digital Wellbeing Report for " + date.format(DATE_FORMAT) + " ===");
+                        writer.println();
+                        writer.println("No usage data recorded for this date.");
+                        writer.println("Please use the application actively to track real usage data.");
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Error creating empty report: " + e.getMessage());
+            }
             return;
         }
 
@@ -90,7 +105,7 @@ public class DataManager {
             List<Map.Entry<String, Long>> sortedEntries = usageData.entrySet()
                     .stream()
                     .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                    .toList();
+                    .collect(Collectors.toList());
 
             for (Map.Entry<String, Long> entry : sortedEntries) {
                 long appMillis = entry.getValue();
